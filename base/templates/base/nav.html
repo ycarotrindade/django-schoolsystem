@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #03045E;">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a href="{% url 'students' 1 %}" class="nav-link">Students</a>
+        </li>
+        {% if perms.auth.view_user %}
+        <li class="nav-item">
+            <a href="{% url 'employees' 1 %}" class="nav-link">Employees</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link ">Logout</a>
+        </li>
+    </ul>
+</nav>

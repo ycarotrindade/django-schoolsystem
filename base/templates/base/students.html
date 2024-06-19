@@ -1,0 +1,112 @@
+{% extends 'base/main.html' %}
+{% block content %}
+<form action="" class="form d-flex-column p-2 justify-content-around">
+    <input type="text" class="form-control" placeholder="Name" name="name__icontains" id="name" oninput="removeSpecialChars('name')">
+    <div class="container d-flex justify-content-around mt-2">
+        <input type="text" class="form-control w-25" placeholder="Grade" name="grade__icontains">
+        <input type="text" class="form-control w-25" placeholder="Class" name="cl__icontains">
+        <select name="status__icontains" class="form-select w-25">
+            <option value="" selected></option>
+            {% for op in status_options %}
+
+            <option value="{{op}}">{{op}}</option>
+
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-info w-25">Search</button>
+        <a href="{% url 'students_create' %}" role="button" class="btn btn-success w-25">Add</a>
+    </div> 
+</form>
+
+{% if student_rows.start_index != 0 %}
+
+<table class="table table-info">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Class</th>
+            <th scope="col">Birth</th>
+            <th scope="col">Score 1</th>
+            <th scope="col">Score 2</th>
+            <th scope="col">Score 3</th>
+            <th scope="col">Status</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for student in student_rows %}
+
+        <tr>
+            <td>{{student.name}}</td>
+            <td>{{student.grade}}°</td>
+            <td>{{student.cl}}</td>
+            <td>{{student.birth}}</td>
+            <td>{{student.score1}}</td>
+            <td>{{student.score2}}</td>
+            <td>{{student.score3}}</td>
+
+            {% if student.status == 'APROVED' %}
+            <td class="text-bg-success">{{student.status}}</td>
+
+            {% elif student.status == 'FAILED' %}
+
+            <td class="text-bg-danger">{{student.status}}</td>
+
+            {% elif student.status == 'ANALYSIS' %}
+
+            <td class="text-bg-warning">{{student.status}}</td>
+
+            {% else %}
+
+            <td class="text-bg-info">{{student.status}}</td>
+
+            {% endif %}
+
+            <td>
+                <div class="container d-flex justify-content-around">
+                    <a href="{% url 'student_delete' student.id %}"><i class="bi bi-trash-fill" style="color: red;" title="delete"></i></a>
+                    <a href="{% url 'student_edit' student.id %}"><i class="bi bi-pencil-fill" style="color: orange;" title="edit"></i></a>
+                </div>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+</table>
+<nav class="container d-flex justify-content-center">
+
+<ul class="pagination">
+{% for value in pages_to_show %}
+
+{% if value == page %}
+
+<li class="page-item active "><a href="#" class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% elif value == '..' %}
+
+<li class="page-item"><a class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% else %}
+
+<li class="page-item"><a href="{% url 'students' value %}" class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% endif %}
+
+{% endfor %}
+
+</ul>
+</nav>
+
+{% else %}
+
+<div class="container-fluid d-flex justify-content-center">
+    <h1>Sorry, we have no data :(</h1>
+</div>
+
+{% endif %}
+
+{% endblock %}

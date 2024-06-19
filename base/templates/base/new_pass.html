@@ -1,0 +1,17 @@
+<div class="container-fluid w-50">
+    <h1>Please, define a password to use on your next login.</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="cpassword">Confirm Password</label>
+                <input type="password" name="cpassword" id="cpassword" class="form-control" oninput="verifyMatch('cpassword','password')" required> 
+        </div>
+        <div class="container d-flex justify-content-around mt-2">
+            <button type="submit" class="btn btn-success w-25" id="submit_button">Save</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,89 @@
+{% extends 'base/main.html' %}
+{% block content %}
+
+
+<form action="" class="form d-flex-column p-2 justify-content-around">
+    <input type="text" class="form-control mb-2" placeholder="Name" name="us.username" id="name" oninput="removeSpecialChars('name')">
+    <input type="email" class="form-control" placeholder="Email" name="us.email" id="email">
+    <div class="container d-flex justify-content-around mt-2">
+        <select name="gp.name" id="status" class="form-select w-25">
+            <option value="{{op}}" selected></option>
+            {% for op in options %}
+            <option value="{{op}}">{{op}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-info w-25">Search</button>
+        <a href="{% url 'employee_add' %}" role="button" class="btn btn-success w-25">Add</a>
+    </div>
+</form>
+
+{% if users_rows.start_index != 0 %}
+
+<table class="table table-info">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Last Login</th>
+            <th scope="col">Email</th>
+            <th scope="col">Date Joined</th>
+            <th scope='col'>Access</th>
+            <th scope='col'>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for user in users_rows %}
+
+        <tr>
+            <td>{{user.username}}</td>
+            <td>{{user.last_login}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.date_joined}}</td>
+            <td>{{user.name}}</td>
+            <td>
+                <div class="container d-flex justify-content-around">
+                    <a href="{% url 'employee_delete' user.id %}"><i class="bi bi-trash-fill" style="color: red;" title="delete"></i></a>
+                    <a href="{% url 'employee_edit' user.id %}"><i class="bi bi-pencil-fill" style="color: orange;" title="edit"></i></a>
+                    <a href="{% url 'reset_password' user.id %}"><i class="bi bi-arrow-clockwise" style="color: green;" title="reset password"></i></a>
+                </div>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+</table>
+<nav class="container d-flex justify-content-center">
+
+<ul class="pagination">
+{% for value in pages_to_show %}
+
+{% if value == page %}
+
+<li class="page-item active "><a href="#" class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% elif value == '..' %}
+
+<li class="page-item"><a class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% else %}
+
+<li class="page-item"><a href="{% url 'employees' value %}" class="page-link bg-info text-dark">{{value}}</a></li>
+
+{% endif %}
+
+{% endfor %}
+
+</ul>
+</nav>
+
+{% else %}
+
+<div class="container-fluid d-flex justify-content-center">
+    <h1>Sorry, we have no data :(</h1>
+</div>
+
+{% endif %}
+
+{% endblock %}
