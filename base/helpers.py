@@ -10,7 +10,6 @@ def calcStatus(queryes:dict):
     status = None
     try:
         mean = (float(queryes['score1'])+float(queryes['score2'])+float(queryes['score3']))/3
-        print(f'nota 1 :{queryes['score1']},nota 2 :{queryes['score2']}, nota 3 :{queryes['score3']}  ')
     except:
         status = 'UNDEFINED'
     else:
