@@ -20,18 +20,23 @@ git clone https://github.com/ycarotrindade/django-schoolsystem.git
 
 2. Add your information in **env.example**, then change the filename to **.env**
 
-3. Create a **superuser**:
+3. Install the requirements
+```
+pip install -r requirements.txt
+```
+
+4. Create a **superuser**:
 
 ```
 py manage.py createsuperuser
 ```
 
-4. Migrate the models:
+5. Migrate the models:
 ```
 py manage.py migrate
 ```
 
-5. Run the Django built-in server:
+6. Run the Django built-in server:
 
 ```
 py manage.py runserver
