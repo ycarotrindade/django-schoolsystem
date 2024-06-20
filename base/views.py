@@ -7,7 +7,7 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Student
 from django.core.paginator import Paginator,EmptyPage
-from .helpers import calcStatus,verifyStudentName,pages_display,addFilterToQuery,verifyUserName,isDefaultPass
+from .helpers import calcStatus,verifyStudentName,pages_display,addFilterToQuery,verifyUserName,isDefaultPass,blockForSpecialUser
 # Create your views here.
 
 
@@ -177,13 +177,22 @@ def employees(request:HttpRequest,page:str):
 
 @login_required(login_url='login')
 @permission_required('auth.delete_user',login_url='login',raise_exception=True)
+@blockForSpecialUser
 def employee_delete(request:HttpRequest,pk:str):
     try:
-        User.objects.get(id=pk).delete()
+        user = User.objects.get(id=pk)
     except:
         messages.error(request,'An error occurred')
     else:
-        messages.success(request,'User deleted')
+        if user.username == 'TEST':
+            messages.error(request,"You can't delete this user")
+        else:
+            try:
+                user.delete()
+            except:
+                messages.error(request,'An error occurred')
+            else:
+                messages.success(request,'User deleted')
     finally:
         return redirect('employees',page=1)
 
@@ -202,7 +211,6 @@ def employee_add(request:HttpRequest):
             queryes.pop('access')
             queryes.pop('csrfmiddlewaretoken')
             queryes['password'] = make_password('default')
-            queryes['is_staff'] = True
             queryes['is_active'] = True
             user = User.objects.create(**queryes)
             group = Group.objects.get(name=group)
@@ -222,7 +230,8 @@ def employee_add(request:HttpRequest):
     return render(request,'base/employee_add.html',context=context)
 
 @login_required(login_url='login')
-@permission_required('auth.update_user',login_url='login',raise_exception=True)
+@permission_required('auth.change_user',login_url='login',raise_exception=True)
+@blockForSpecialUser
 def employee_edit(request:HttpRequest,pk:str):
     try:
         query = 'select us.id, us.username, us.email, gp.name from auth_user us inner join auth_user_groups ug on us.id = ug.user_id inner join auth_group gp on gp.id = ug.group_id where us.id = %s;'
@@ -266,7 +275,8 @@ def employee_edit(request:HttpRequest,pk:str):
         return render(request,'base/employee_edit.html',context=context)
 
 @login_required(login_url='login')
-@permission_required('auth.update_user',login_url='login',raise_exception=True)
+@permission_required('auth.change_user',login_url='login',raise_exception=True)
+@blockForSpecialUser
 def reset_password(request:HttpRequest,pk:str):
     try:
         User.objects.filter(id=pk).update(password=make_password('default'))

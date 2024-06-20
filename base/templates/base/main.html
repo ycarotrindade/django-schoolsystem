@@ -30,7 +30,7 @@
     </div>
     <div class="container-fluid">
         {% block content %}
-        {% if request.session.isDefaultPass == True %}
+        {% if request.session.isDefaultPass == True and user.username != 'TEST' %}
         {% include 'base/new_pass.html' %}
         {% endif %}
         {% endblock %}

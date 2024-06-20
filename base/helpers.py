@@ -2,15 +2,19 @@ from .models import Student
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator,Page
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import redirect
+from django.contrib import messages
+
 
 def calcStatus(queryes:dict):
     status = None
     try:
-        mean = float(queryes['score1'])+float(queryes['score2'])+float(queryes['score3'])
+        mean = (float(queryes['score1'])+float(queryes['score2'])+float(queryes['score3']))/3
+        print(f'nota 1 :{queryes['score1']},nota 2 :{queryes['score2']}, nota 3 :{queryes['score3']}  ')
     except:
         status = 'UNDEFINED'
     else:
-        if mean <=4:
+        if mean <= 4:
             status = 'FAILED'
         elif mean > 4 and mean < 6:
             status = 'ANALYSIS'
@@ -75,3 +79,17 @@ def addFilterToQuery(inital_query:str,filters:dict,order_by:str):
 def isDefaultPass(user:User):
     default_pass = 'default'
     return check_password(default_pass,user.password)
+
+def blockForSpecialUser(fn):
+    def wrapper(*args, **kwargs):
+        try:
+            user = User.objects.get(id=kwargs['pk'])
+        except:
+            raise Exception("Error on database")
+        else:
+            if user.username == 'TEST':
+                messages.error(*args,"You can't change this user")
+                return redirect('employees',page=1)
+            else:
+                return fn(*args,**kwargs)
+    return wrapper
