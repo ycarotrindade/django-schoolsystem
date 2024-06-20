@@ -14,18 +14,25 @@ If you just want to see the software, you can access this link: [https://ycaro.p
 
 1. Download or clone this repository:
 
-`git clone https://github.com/ycarotrindade/django-schoolsystem.git`
+```
+git clone https://github.com/ycarotrindade/django-schoolsystem.git
+```
 
 2. Add your information in **env.example**, then change the filename to **.env**
 
 3. Create a **superuser**:
 
-`py manage.py createsuperuser`
+```
+py manage.py createsuperuser
+```
 
 4. Migrate the models:
-
-`py manage.py migrate`
+```
+py manage.py migrate
+```
 
 5. Run the Django built-in server:
 
-`py manage.py runserver`
+```
+py manage.py runserver
+```
